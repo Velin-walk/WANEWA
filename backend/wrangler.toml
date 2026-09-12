@@ -1,0 +1,21 @@
+name = "walk-nepal-api"
+type = "service"
+main = "src/index.ts"
+
+[env.production]
+name = "walk-nepal-api-prod"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "walk-nepal-prod"
+database_id = "xxxxx"
+
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "walk-nepal-media"
+
+[durable_objects]
+bindings = [{name = "TREK_INSTANCES", class_name = "TrekInstance"}]
+
+[triggers]
+crons = ["0 */6 * * *"]  # Cleanup old sessions

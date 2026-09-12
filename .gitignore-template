@@ -1,0 +1,116 @@
+# Walk Nepal Walk - .gitignore Template
+# Add these lines to your existing .gitignore files
+
+# ============================================
+# ADD TO: backend/.gitignore
+# ============================================
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+.env.production
+.wrangler/
+wrangler.toml.local
+
+# Firebase
+serviceAccountKey.json
+
+# Dependencies
+node_modules/
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# ============================================
+# ADD TO: mobile/.gitignore
+# ============================================
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+.env.production
+*.jks
+*.keystore
+
+# Firebase
+google-services.json
+GoogleService-Info.plist
+
+# Dependencies
+node_modules/
+ios/Pods/
+dist/
+build/
+
+# Build artifacts
+android/app/build/
+android/.gradle/
+ios/build/
+ios/Pods/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# React Native
+.watchmanconfig
+.gradle/
+.jsbundleTmp
+.metro-health-check-result
+
+# Testing
+coverage/
+.nyc_output/
+
+# ============================================
+# ADD TO: root .gitignore
+# ============================================
+
+# Generated files directory (remove after integration)
+walk-nepal-generated/
+
+# Node modules at root
+node_modules/
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
