@@ -58,8 +58,9 @@ export default function App() {
       const contentType = res.headers.get('content-type') || '';
       if (res.ok && contentType.includes('application/json')) {
         const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
-          setTreks(data);
+        const trekItems = Array.isArray(data) ? data : data?.data;
+        if (Array.isArray(trekItems) && trekItems.length > 0) {
+          setTreks(trekItems);
         } else {
           setTreks((prev) => (prev.length > 0 ? prev : FALLBACK_TREKS));
         }
