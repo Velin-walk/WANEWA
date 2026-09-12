@@ -12,7 +12,7 @@ import { InfoPagesModal, SubPageType } from './components/InfoPagesModal';
 import { FALLBACK_TREKS } from './data/fallbackTreks';
 import { CheckCircle2, AlertCircle, Mountain, Heart } from 'lucide-react';
 import MapMinersDashboard from './components/mapminers/MapMinersDashboard';
-import { apiFetch } from './services/api';
+import { apiFetch, normalizeTrek } from './services/api';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<'treks' | 'bookings' | 'saved' | 'mapminers'>('treks');
@@ -60,7 +60,7 @@ export default function App() {
         const data = await res.json();
         const trekItems = Array.isArray(data) ? data : data?.data;
         if (Array.isArray(trekItems) && trekItems.length > 0) {
-          setTreks(trekItems);
+          setTreks(trekItems.map(normalizeTrek));
         } else {
           setTreks((prev) => (prev.length > 0 ? prev : FALLBACK_TREKS));
         }
