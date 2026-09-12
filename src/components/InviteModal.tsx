@@ -1,48 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Trek } from '../types';
-import { X, Share2, Copy, Check, Link as LinkIcon, MessageCircle } from 'lucide-react';
+import { X, Share2, Copy, Check, MessageCircle } from 'lucide-react';
 
 interface InviteModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedTrek?: Trek | null;
-  onJoinCode: (code: string) => Promise<void>;
-  onCreateInvite?: (trekId: string) => Promise<string>;
 }
 
 export const InviteModal: React.FC<InviteModalProps> = ({
   isOpen,
   onClose,
   selectedTrek,
-  onJoinCode,
-  onCreateInvite,
 }) => {
-  const [generatedCode, setGeneratedCode] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (isOpen && selectedTrek && onCreateInvite) {
-      setGeneratedCode(null);
-      setError(null);
-      setLoading(true);
-      onCreateInvite(selectedTrek.id)
-        .then((code) => {
-          setGeneratedCode(code);
-        })
-        .catch((err) => {
-          setError(err?.message || 'Failed to create invite link');
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
-  }, [isOpen, selectedTrek, onCreateInvite]);
-
-  const shareUrl = generatedCode
-    ? `${window.location.origin}/?invite=${generatedCode}`
-    : window.location.href;
+  const shareUrl = selectedTrek
+    ? `${window.location.origin}/?trek=${encodeURIComponent(selectedTrek.id)}`
+    : window.location.origin;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareUrl);
@@ -105,12 +79,6 @@ export const InviteModal: React.FC<InviteModalProps> = ({
           </button>
         </div>
 
-        {error && (
-          <div className="mt-3 p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs">
-            {error}
-          </div>
-        )}
-
         <div className="overflow-y-auto no-scrollbar space-y-4 py-3">
           {selectedTrek && (
             <div className="p-3.5 bg-[#F9F7F5] rounded-2xl border border-[#F0EBE5]">
@@ -126,13 +94,7 @@ export const InviteModal: React.FC<InviteModalProps> = ({
             </div>
           )}
 
-          {loading ? (
-            <div className="flex flex-col items-center justify-center py-6 gap-2">
-              <div className="w-6 h-6 border-2 border-[#7ABA42] border-t-transparent rounded-full animate-spin" />
-              <span className="text-xs font-semibold text-[#8B8680]">Generating link...</span>
-            </div>
-          ) : (
-            <div className="space-y-3">
+          <div className="space-y-3">
               <span className="text-xs font-semibold text-[#5A5551] block">
                 Send this event link to other hikers:
               </span>
@@ -183,8 +145,7 @@ export const InviteModal: React.FC<InviteModalProps> = ({
                   <span>Share Sheet</span>
                 </button>
               </div>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

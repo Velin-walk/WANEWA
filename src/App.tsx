@@ -94,32 +94,9 @@ export default function App() {
     }
   }, [currentUserEmail]);
 
-  const handleJoinByCode = async (code: string) => {
-    const res = await apiFetch(`/invites/join?code=${encodeURIComponent(code)}`);
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.error || 'Invalid invite code');
-    }
-
-    if (data.trek) {
-      showToast(`Verified code for ${data.trek.name}!`, 'success');
-      setSelectedTrekForRegister(data.trek);
-      setCurrentTab('treks');
-    }
-  };
-
   useEffect(() => {
     fetchTreks();
     fetchBookings();
-
-    // Check for invite code in URL (e.g. ?invite=WN-XXXX)
-    const urlParams = new URLSearchParams(window.location.search);
-    const inviteCode = urlParams.get('invite');
-    if (inviteCode) {
-      handleJoinByCode(inviteCode).catch((err) => {
-        showToast(err.message, 'error');
-      });
-    }
 
     // Refresh every 10 seconds for live roster updates
     const interval = setInterval(() => {
@@ -181,17 +158,6 @@ export default function App() {
     await fetchBookings();
   };
 
-  const handleCreateInvite = async (trekId: string) => {
-    const res = await apiFetch(`/treks/${trekId}/invite`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_email: currentUserEmail }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to generate invite');
-    return data.code;
-  };
-
   return (
     <div className="min-h-screen bg-[#F3EFEA] md:bg-[#F9F7F5] flex flex-col items-center justify-start w-full">
       {/* Viewport Container: Compact phone container on mobile, full-width responsive on desktop */}
@@ -221,10 +187,6 @@ export default function App() {
           onTabChange={setCurrentTab}
           bookingCount={bookings.length}
           savedCount={favorites.length}
-          onOpenInvite={() => {
-            setSelectedTrekForInvite(treks[0] || null);
-            setShowInviteModal(true);
-          }}
           onOpenContribute={() => setShowMapMinerContribute(true)}
           onOpenInfoPage={(page) => setInfoModalPage(page)}
           userEmail={currentUserEmail}
@@ -361,8 +323,6 @@ export default function App() {
               setSelectedTrekForInvite(null);
             }}
             selectedTrek={selectedTrekForInvite}
-            onJoinCode={handleJoinByCode}
-            onCreateInvite={handleCreateInvite}
           />
         )}
 

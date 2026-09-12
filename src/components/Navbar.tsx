@@ -19,7 +19,7 @@ interface NavbarProps {
   onTabChange: (tab: 'treks' | 'bookings' | 'saved' | 'mapminers') => void;
   bookingCount: number;
   savedCount: number;
-  onOpenInvite: () => void;
+  onOpenInvite?: () => void;
   userEmail: string;
   onOpenContribute?: () => void;
   onOpenInfoPage?: (page: SubPageType) => void;
@@ -323,8 +323,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <Compass className="w-3.5 h-3.5" />
               <span>Contribute Map</span>
             </button>
-          ) : (
-            /* Standard View: Invite Code Quick Trigger */
+          ) : onOpenInvite ? (
             <button
               type="button"
               id="header-invite-btn"
@@ -333,9 +332,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               aria-label="Invite or enter code"
             >
               <Share2 className="w-3.5 h-3.5 text-[#E08828]" />
-              <span className="text-xs font-semibold">Invite Code</span>
+              <span className="text-xs font-semibold">Share Trek</span>
             </button>
-          )}
+          ) : null}
 
           {/* User Avatar */}
           <div
