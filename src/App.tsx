@@ -12,6 +12,7 @@ import { InfoPagesModal, SubPageType } from './components/InfoPagesModal';
 import { FALLBACK_TREKS } from './data/fallbackTreks';
 import { CheckCircle2, AlertCircle, Mountain, Heart } from 'lucide-react';
 import MapMinersDashboard from './components/mapminers/MapMinersDashboard';
+import { apiFetch } from './services/api';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<'treks' | 'bookings' | 'saved' | 'mapminers'>('treks');
@@ -53,7 +54,7 @@ export default function App() {
 
   const fetchTreks = useCallback(async () => {
     try {
-      const res = await fetch('/api/treks');
+      const res = await apiFetch('/treks');
       const contentType = res.headers.get('content-type') || '';
       if (res.ok && contentType.includes('application/json')) {
         const data = await res.json();
@@ -77,7 +78,7 @@ export default function App() {
   const fetchBookings = useCallback(async () => {
     setLoadingBookings(true);
     try {
-      const res = await fetch(`/api/bookings?email=${encodeURIComponent(currentUserEmail)}`);
+      const res = await apiFetch(`/bookings?email=${encodeURIComponent(currentUserEmail)}`);
       const contentType = res.headers.get('content-type') || '';
       if (res.ok && contentType.includes('application/json')) {
         const data = await res.json();
@@ -93,7 +94,7 @@ export default function App() {
   }, [currentUserEmail]);
 
   const handleJoinByCode = async (code: string) => {
-    const res = await fetch(`/api/invites/join?code=${encodeURIComponent(code)}`);
+    const res = await apiFetch(`/invites/join?code=${encodeURIComponent(code)}`);
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.error || 'Invalid invite code');
@@ -142,7 +143,7 @@ export default function App() {
   };
 
   const handleRegisterSubmit = async (formData: BookingFormData) => {
-    const res = await fetch('/api/bookings', {
+    const res = await apiFetch('/bookings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -166,7 +167,7 @@ export default function App() {
   };
 
   const handleCancelBooking = async (bookingId: number) => {
-    const res = await fetch(`/api/bookings/${bookingId}`, {
+    const res = await apiFetch(`/bookings/${bookingId}`, {
       method: 'DELETE',
     });
     if (!res.ok) {
@@ -180,7 +181,7 @@ export default function App() {
   };
 
   const handleCreateInvite = async (trekId: string) => {
-    const res = await fetch(`/api/treks/${trekId}/invite`, {
+    const res = await apiFetch(`/treks/${trekId}/invite`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ user_email: currentUserEmail }),

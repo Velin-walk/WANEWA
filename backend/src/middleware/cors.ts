@@ -36,6 +36,8 @@ export function withCORS(
   const isOriginAllowed =
     Array.isArray(allowedOrigins) && allowedOrigins.includes(origin || '')
       ? origin
+      : origin && /\.pages\.dev$/.test(new URL(origin).hostname)
+      ? origin
       : allowedOrigins === '*'
       ? '*'
       : null;
@@ -69,6 +71,8 @@ export function applyCORSHeaders(
   const allowedOrigins = options.origin || DEFAULT_OPTIONS.origin;
   const isOriginAllowed =
     Array.isArray(allowedOrigins) && allowedOrigins.includes(origin || '')
+      ? origin
+      : origin && /\.pages\.dev$/.test(new URL(origin).hostname)
       ? origin
       : allowedOrigins === '*'
       ? '*'
